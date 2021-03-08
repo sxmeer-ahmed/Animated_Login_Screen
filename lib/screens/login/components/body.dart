@@ -2,11 +2,23 @@ import 'dart:async';
 
 import 'package:animation/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:animation/splash_elements/LEDBulb.dart';
+import 'package:animation/splash_elements/name.dart';
+import 'package:animation/splash_elements/lamp_switch.dart';
+import 'package:animation/splash_elements/lamp_switch_rope.dart';
+import 'package:animation/splash_elements/lamp_hanger_rope.dart';
+import 'package:animation/splash_elements/lamp.dart';
 
 import 'land.dart';
 import 'rounded_text_field.dart';
 import 'sun.dart';
 import 'tabs.dart';
+
+final darkGray = const Color(0xFF232323);
+final bulbOnColor = const Color(0xFFFFE12C);
+final bulbOffColor = const Color(0xFFC1C1C1);
+final animationDuration = const Duration(milliseconds: 500);
+bool _isSwitchOn = false;
 
 class Body extends StatefulWidget {
   @override
@@ -52,6 +64,8 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     List<Color> lightBgColors = [
       Color(0xFF8C2480),
       Color(0xFFCE587D),
@@ -78,44 +92,91 @@ class _BodyState extends State<Body> {
       child: Stack(
         children: [
           Sun(duration: _duration, isFullSun: isFullSun),
-          Land(),
+          !_isSwitchOn
+              ? Positioned(
+                  bottom: getProportionateScreenWidth(-65),
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(
+                    "assets/images/land_tree_light.png",
+                    height: getProportionateScreenWidth(430),
+                    fit: BoxFit.fitHeight,
+                  ),
+                )
+              : Positioned(
+                  bottom: getProportionateScreenWidth(-65),
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(
+                    "assets/images/land_tree_dark.png",
+                    height: getProportionateScreenWidth(430),
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  VerticalSpacing(of: 50),
+                  /* VerticalSpacing(of: 50),
                   Tabs(
                     press: (value) {
                       changeMood(value);
                     },
                   ),
-                  VerticalSpacing(),
-                  Text(
-                    "Good Morning",
-                    style: Theme.of(context).textTheme.headline3.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  VerticalSpacing(of: 10),
-                  Text(
-                    "Enter your Informations below",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  VerticalSpacing(of: 50),
-                  RoundedTextField(
-                    initialValue: "ourdemo@email.com",
-                    hintText: "Email",
-                  ),
-                  VerticalSpacing(),
-                  RoundedTextField(
-                    initialValue: "XXXXXXX",
-                    hintText: "Password",
-                  ),
+                  VerticalSpacing(),*/
                 ],
               ),
             ),
-          )
+          ),
+          LampHangerRope(
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+              color: darkGray),
+          LEDBulb(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            onColor: bulbOnColor,
+            offColor: bulbOffColor,
+            isSwitchOn: _isSwitchOn,
+          ),
+          Lamp(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            color: darkGray,
+            isSwitchOn: _isSwitchOn,
+            gradientColor: bulbOnColor,
+            animationDuration: animationDuration,
+          ),
+          LampSwitch(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            toggleOnColor: bulbOnColor,
+            toggleOffColor: bulbOffColor,
+            color: darkGray,
+            isSwitchOn: _isSwitchOn,
+            onTap: () {
+              setState(() {
+                changeMood(_isSwitchOn ? 0 : 1);
+                _isSwitchOn = !_isSwitchOn;
+              });
+            },
+            animationDuration: animationDuration,
+          ),
+          LampSwitchRope(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            color: darkGray,
+            isSwitchOn: _isSwitchOn,
+            animationDuration: animationDuration,
+          ),
+          Name(
+            screenWidth: screenWidth,
+            screenHeight: screenWidth,
+            color: darkGray,
+            roomName: _isSwitchOn ? "SIGN UP" : "LOGIN",
+          ),
         ],
       ),
     );

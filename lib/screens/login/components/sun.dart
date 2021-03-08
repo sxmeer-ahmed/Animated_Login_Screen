@@ -20,7 +20,7 @@ class Sun extends StatelessWidget {
       duration: _duration,
       curve: Curves.easeInOut,
       left: getProportionateScreenWidth(30),
-      bottom: getProportionateScreenWidth(isFullSun ? -45 : -120),
+      bottom: getProportionateScreenWidth(isFullSun ? -20 : -250),
       child: SvgPicture.asset("assets/icons/Sun.svg"),
     );
   }
